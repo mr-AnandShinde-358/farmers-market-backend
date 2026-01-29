@@ -2,7 +2,7 @@ import { NextFunction } from "express";
 import UserModel, { Iuser } from "../models/user.model";
 
 import { ApiError } from "../utils/ApiError";
-import { IRegistrationBody } from "../controllers/user.controller";
+import { ILoginUser, IRegistrationBody } from "../controllers/user.controller";
 
 
 export const createUser = async (userData: IRegistrationBody): Promise<Iuser> => {
@@ -33,3 +33,24 @@ export const createUser = async (userData: IRegistrationBody): Promise<Iuser> =>
     return createdUser as Iuser;
  
 };
+
+
+export const loginUser = async(userData:ILoginUser): Promise<Iuser>=>{
+    const {email,password} = userData;
+    
+    const user = await UserModel.findOne({email}).select("+password")
+   
+
+    if(!user){
+      throw new ApiError("Invalid email or password",401)
+    }
+
+    const isPasswordMatch = await user.comparePassword(password)
+
+    if(!isPasswordMatch){
+      throw new ApiError("Invalid email or password",401)
+    }
+
+    return user;
+
+}

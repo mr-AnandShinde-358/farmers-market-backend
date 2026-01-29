@@ -72,11 +72,29 @@ const userSchema:Schema<Iuser> = new mongoose.Schema({
 
 // pre-save hashpassword
 
-userSchema.pre("save", async function(next){
-    if(!this.isModified(this.password)) return next()
-   this.password = await bcrypt.hash(this.password,10)
-   next()
-})
+// userSchema.pre("save", async function(next){
+//     if(!this.isModified("password")) return next()
+//    this.password = await bcrypt.hash(this.password,10)
+//    next()
+
+   
+// })
+
+userSchema.pre("save", async function(next) {
+    // 1. Agar password change nahi hua hai, toh aage badho
+    if (!this.isModified("password")) {
+        return next();
+    }
+
+    try {
+        // 2. Hash the password
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (error: any) {
+        return next(error);
+    }
+});
 
 // compare-password for login
 userSchema.methods.comparePassword = async function(password:string){

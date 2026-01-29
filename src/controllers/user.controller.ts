@@ -1,9 +1,9 @@
-import UserModel, { Iuser } from "../models/user.model";
+import  { Iuser } from "../models/user.model";
 import { catchAsync } from "../utils/catchAsync";
 import { Request, Response, NextFunction } from "express";
-import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import * as userService from "../services/user.services";
+import { sendToken } from "../utils/sendJwtToken";
 
 export interface IRegistrationBody {
   email: string;
@@ -25,6 +25,30 @@ export const registrationUser = catchAsync(
     res.status(201).json(
       new ApiResponse<Iuser>(201,newUser,"Account created successfully")
     )
+  }
+)
+
+export interface ILoginUser {
+  email:string;
+  password:string;
+}
+
+export const loginUser = catchAsync(
+  async (req:Request,res:Response)=>{
+    
+    
+
+    // Service handle logic
+    const userData =req.body as ILoginUser
+  
+
+    const user = await userService.loginUser(userData)
+
+  
+
+    // Utility handle response and cookies
+
+    await sendToken(user,200,res)
   }
 )
 

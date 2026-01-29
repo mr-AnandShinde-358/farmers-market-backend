@@ -12,9 +12,8 @@ export const createUserSchema = z.object({
 
 
 export const loginUserSchema = z.object({
-    body:{
-        phone:z.string(),
-        password:z.string()
-
-    }
+    body:z.object({
+        email:z.email("Ema0il is required"),
+        password:z.string().min(6,"minmum is 6 letter")
+    })
 })
