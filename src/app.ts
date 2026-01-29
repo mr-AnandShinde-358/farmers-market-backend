@@ -12,6 +12,8 @@ import { ApiError } from "./utils/ApiError";
 import type { NextFunction, Request, Response } from "express";
 import { checkHealth } from "./controllers/health.controller";
 
+import UserRouter from "./routes/user.routes";
+
 // Load environment variables
 dotenv.config();
 
@@ -83,6 +85,9 @@ app.use(
 
 app.use("/health", checkHealth)
 
+// user route
+
+app.use("/user",UserRouter)
 
 // 404 handle
 

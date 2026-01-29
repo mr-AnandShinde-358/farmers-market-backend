@@ -11,7 +11,7 @@ export enum UserRole {
     BUYER="BUYER"
 }
 
-interface Iuser extends Document{
+export interface Iuser extends Document{
     phone:string;
     email:string;
     password:string;
@@ -125,4 +125,6 @@ secret as string,
 }
 
 
-export const User:Model<Iuser> = mongoose.model<Iuser>("User",userSchema)
+ const User:Model<Iuser> = mongoose.model<Iuser>("User",userSchema)
+
+ export default User;
