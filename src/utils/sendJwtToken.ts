@@ -1,6 +1,6 @@
 import { Response } from "express";
 
-import { Iuser } from "../models/user.model";
+import { IUser } from "../models/user.model";
 
 
 export const cookiesOptions:any ={
@@ -10,7 +10,7 @@ export const cookiesOptions:any ={
     path:"/"
 };
 
-export const sendToken = async (user:Iuser,statusCode:number,res:Response)=>{
+export const sendToken = async (user:IUser,statusCode:number,res:Response)=>{
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
 
@@ -20,7 +20,7 @@ export const sendToken = async (user:Iuser,statusCode:number,res:Response)=>{
     await user.save({validateBeforeSave:false})
     
     // Cookie Expiry (Example:15m for access,7d for refresh)
-    const accessTokenExpire = 15*60*1000;
+    const accessTokenExpire = 1 * 24 * 60 * 60 * 1000;
     const refreshTokenExpire = 7*24*60*60*1000;
 
     res.cookie("accessToken",accessToken,{

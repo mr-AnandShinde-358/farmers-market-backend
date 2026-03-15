@@ -3,15 +3,16 @@ import mongoose from "mongoose";
 import type { Document,Model,Schema } from "mongoose";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
+
 
 export enum UserRole {
     ADMIN="ADMIN",
     FARMER="FARMER",
-    LOGISTICS="LOGISTICS",
     BUYER="BUYER"
 }
 
-export interface Iuser extends Document{
+export interface IUser extends Document{
     phone:string;
     email:string;
     password:string;
@@ -20,6 +21,7 @@ export interface Iuser extends Document{
     createdAt: Date; 
     updatedAt: Date; 
     refreshToken ?:string;
+    isBlocked:boolean;
     comparePassword:(password:string)=>Promise<boolean>;
     generateAccessToken:()=> string;
     generateRefreshToken:()=>string;
@@ -28,7 +30,14 @@ export interface Iuser extends Document{
 
 const emailRegexPattern: RegExp = /^[^\s@]*@[^\s@]+\.[^\s@]+$/;
 
-const userSchema:Schema<Iuser> = new mongoose.Schema({
+// Paginate ke liye special type
+
+export interface IUserModel extends Model<IUser>{
+    aggregatePaginate:any;
+}
+
+
+const userSchema:Schema<IUser> = new mongoose.Schema({
     phone:{
         type:String,
         required:[true,'Please enter your phone number'],
@@ -66,9 +75,16 @@ const userSchema:Schema<Iuser> = new mongoose.Schema({
     refreshToken:{
         type:String,
         select:false
-    }
+    },
+    isBlocked: {
+     type: Boolean,
+    default: false,
+}
 
 },{timestamps:true})
+
+// <- Plugin lagao
+userSchema.plugin(mongooseAggregatePaginate);
 
 // pre-save hashpassword
 
@@ -143,6 +159,12 @@ secret as string,
 }
 
 
- const User:Model<Iuser> = mongoose.model<Iuser>("User",userSchema)
+//  const User:Model<Iuser> = mongoose.model<Iuser>("User",userSchema)
 
- export default User;
+//  export default User;
+
+
+export const User = (
+    mongoose.models.User || mongoose.model<IUser,IUserModel>("User",userSchema)
+ ) as IUserModel
+

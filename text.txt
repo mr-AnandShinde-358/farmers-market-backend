@@ -1,0 +1,25 @@
+
+// export enum ProductStatus {
+//     ACTIVE = "ACTIVE",
+//     SOLD_OUT="SOLD_OUT",
+//     INACTIVE="INACTIVE"
+// }
+
+// export interface IProduct extends Document {
+//     farmer:mongoose.Types.ObjectId;
+//     name:string;
+//     description?:string;
+//     price:number;
+//     unit:string;
+//     quantity:number;
+//     images:string[];
+//     category:ProductCategory;
+//     harvestDate:Date;
+//     location:{
+//         district:string;
+//         state:string;
+//     };
+//     status:ProductStatus;
+//     createdAt:Date;
+//     updatedAt:Date;
+// }

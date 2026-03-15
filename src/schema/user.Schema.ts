@@ -5,8 +5,7 @@ export const createUserSchema = z.object({
         phone:z.string().length(10,"Phone number must be exactly 10 digits"),
         email:z.email("Invalid email address"),
         password:z.string().min(6,'Minimum 6 world required'),
-        role:z.enum(["ADMIN","FARMAR","LOGISTICS","BUYER"]).optional()
-
+        role:z.enum(["ADMIN","FARMER","BUYER"]).optional()
     })
 })
 

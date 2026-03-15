@@ -1,7 +1,8 @@
 import express from "express";
 import { validate } from "../middleware/validate.middleware";
 import { createUserSchema, loginUserSchema } from "../schema/user.Schema";
-import { loginUser, registrationUser } from "../controllers/user.controller";
+import { getUserInfo, loginUser, logout, registrationUser, updateAccessToken } from "../controllers/user.controller";
+import { isAuthenticated } from "../middleware/auth.middleware";
 
 const router = express.Router()
 
@@ -14,7 +15,11 @@ router.post(
 )
 
 router.post(
-    "/loginUser",validate(loginUserSchema),
+    "/login",validate(loginUserSchema),
     loginUser
 )
+
+router.post("/logout",isAuthenticated,logout)
+router.post("/refresh",isAuthenticated,updateAccessToken)
+router.get("/me",isAuthenticated,getUserInfo)
 export default router

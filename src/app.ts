@@ -11,9 +11,11 @@ import { ApiError } from "./utils/ApiError";
 
 import type { NextFunction, Request, Response } from "express";
 import { checkHealth } from "./controllers/health.controller";
-
+import ProductRoutes from "./routes/product.routes"
 import UserRouter from "./routes/user.routes";
-
+import FarmerRoutes from "./routes/farmerProfile.routes"
+import OrderRoutes from "./routes/order.routes"
+import adminRoutes from "./routes/admin.routes";
 // Load environment variables
 dotenv.config();
 
@@ -83,12 +85,27 @@ app.use(
 
 // API Routes
 
-app.use("/health", checkHealth)
+app.use("/api/v1/health", checkHealth)
 
 // user route
 
-app.use("/user",UserRouter)
+app.use("/api/v1/user",UserRouter)
 
+// product and some farmer that releted to product routes
+
+app.use("/api/v1/products",ProductRoutes);
+
+// farmer routes
+
+app.use("/api/v1/farmer",FarmerRoutes);
+
+// order routes
+app.use("/api/v1/orders",OrderRoutes);
+
+
+// admin routes
+
+app.use("/api/admin", adminRoutes);
 // 404 handle
 
 // unknown route

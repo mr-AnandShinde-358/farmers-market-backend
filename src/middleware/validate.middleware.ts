@@ -5,17 +5,22 @@ import { z, ZodError } from "zod";
 export const validate = (schema: z.ZodTypeAny) =>
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            await schema.parseAsync({
+           const parsed = await schema.parseAsync({
                 body: req.body,
                 query: req.query,
                 params: req.params
-            });
-            return next();
+            }) as any;
+             req.body = parsed.body;
+             req.query = parsed.query;
+             req.params = parsed.params;
+
+      next();
+            // return next();
         } catch (error: any) {
             if (error instanceof ZodError) {
                 return res.status(400).json({
                     success: false,
-                    message: "Validation Error",
+                    message: "Validation data Error",
                     errors: error.issues.map((issue) => ({
                         // Agar path khali hai toh full path dikhaye
                         field: issue.path.join('.'), 
